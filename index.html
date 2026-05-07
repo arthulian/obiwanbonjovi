@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtue & Resilience - A Framework for Mental Fortitude</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sage-50: #f8f9f7;
+            --sage-100: #eef1ec;
+            --sage-200: #d9e0d4;
+            --sage-300: #b8c5ae;
+            --sage-400: #95a687;
+            --sage-500: #7a8a6b;
+            --sage-600: #606d54;
+            --sage-700: #4d5844;
+            --sage-800: #404a39;
+            --sage-900: #363f30;
+            --charcoal-50: #f6f7f8;
+            --charcoal-100: #e8eaed;
+            --charcoal-200: #d1d5db;
+            --charcoal-300: #9ca3af;
+            --charcoal-400: #6b7280;
+            --charcoal-500: #4b5563;
+            --charcoal-600: #374151;
+            --charcoal-700: #1f2937;
+            --charcoal-800: #111827;
+            --charcoal-900: #0f172a;
+            --accent-gold: #d4af37;
+            --accent-copper: #b87333;
+            --accent-teal: #4a9b8e;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--sage-50) 0%, var(--charcoal-50) 100%);
+            color: var(--charcoal-800);
+            line-height: 1.6;
+        }
+        
+        .section { padding: 5rem 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; margin-bottom: 1rem; }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover { transform: translateY(-5px); }
+        
+        .card-header { display: flex; align-items: center; margin-bottom: 1rem; }
+        .card-number {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-copper));
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; margin-right: 1rem;
+        }
+        
+        /* The expansion logic */
+        .card-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card.active .card-content {
+            max-height: 1000px; /* High enough to contain content */
+            opacity: 1;
+            margin-top: 1.5rem;
+        }
+        
+        .card-toggle {
+            position: absolute; top: 2rem; right: 2rem;
+            width: 24px; height: 24px;
+            background: var(--sage-200); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .card-toggle::after { content: '+'; font-weight: bold; }
+        .card.active .card-toggle::after { content: '−'; }
+
+        .mechanism, .impact, .counter-measures {
+            padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid;
+        }
+        .mechanism { background: var(--sage-100); border-color: var(--accent-teal); }
+        .impact { background: #fef2f2; border-color: #ef4444; }
+        .counter-measures { background: #f0fdf4; border-color: #22c55e; }
+
+        .virtue-tag {
+            display: inline-block; background: var(--accent-gold); color: white;
+            padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem;
+            margin: 0.25rem; cursor: pointer;
+        }
+
+        .cycle-container { background: white; border-radius: 20px; padding: 3rem; margin-top: 3rem; }
+        .cycle-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .cycle-step { display: flex; padding: 1.5rem; background: var(--sage-50); border-radius: 12px; }
+        .step-number { 
+            width: 30px; height: 30px; background: var(--accent-teal); 
+            color: white; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;
+        }
+
+        .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent-gold); z-index: 1000; transition: width 0.1s; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <section class="section" id="external">
+        <div class="container">
+            <div class="section-header">
+                <div style="background: var(--charcoal-800); border-radius: 12px; padding: 2rem; margin-bottom: 4rem; color: white;">
+                    <h1 class="text-4xl font-black">VIRTUE & RESILIENCE</h1>
+                </div>
+                <h2 class="section-title">External Pressure</h2>
+                <p>Understanding and countering psychological manipulation tactics</p>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-number">1</div>
+                        <h3 class="font-bold text-xl">Cognitive Manipulation</h3>
+                    </div>
+                    <div class="card-toggle"></div>
+                    <div class="card-content">
+                        <div class="mechanism"><strong>Mechanism:</strong> Distorts reality through gaslighting and information control.</div>
+                        <div class="impact"><strong>Impact:</strong> Erodes self-trust and causes chronic stress.</div>
+                        <div class="counter-measures">
+                            <span class="virtue-tag" data-virtue="evaluative">Evaluative Thinking</span>
+                            <span class="virtue-tag" data-virtue="sense">Sense-Making</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-number">2</div>
+                        <h3 class="font-bold text-xl">Persuasive Control</h3>
+                    </div>
+                    <div class="card-toggle"></div>
+                    <div class="card-content">
+                        <div class="mechanism"><strong>Mechanism:</strong> Emotional appeals and logical fallacies.</div>
+                        <div class="impact"><strong>Impact:</strong> Exploits anxiety to force hasty decisions.</div>
+                        <div class="counter-measures">
+                            <span class="virtue-tag" data-virtue="impartiality">Impartiality</span>
+                            <span class="virtue-tag" data-virtue="self-control">Self-Control</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-number">3</div>
+                        <h3 class="font-bold text-xl">Normative Control</h3>
+                    </div>
+                    <div class="card-toggle"></div>
+                    <div class="card-content">
+                        <div class="mechanism"><strong>Mechanism:</strong> Social pressure and conformity.</div>
+                        <div class="impact"><strong>Impact:</strong> Fear of rejection and cognitive dissonance.</div>
+                        <div class="counter-measures">
+                            <span class="virtue-tag" data-virtue="fairness">Fairness</span>
+                            <span class="virtue-tag" data-virtue="efficacy">Self-Confidence</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-number">4</div>
+                        <h3 class="font-bold text-xl">Overt Coercion</h3>
+                    </div>
+                    <div class="card-toggle"></div>
+                    <div class="card-content">
+                        <div class="mechanism"><strong>Mechanism:</strong> Threats, force, and exploitation.</div>
+                        <div class="impact"><strong>Impact:</strong> Triggers intense fear and long-term trauma.</div>
+                        <div class="counter-measures">
+                            <span class="virtue-tag" data-virtue="perseverance">Perseverance</span>
+                            <span class="virtue-tag" data-virtue="persistence">Persistence</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="internal">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Internal Tools</h2>
+            </div>
+            <div class="cards-grid">
+                <div class="card" id="virtue-evaluative">
+                    <div class="card-header"><div class="card-number">1</div><h3 class="font-bold">Evaluative Thinking</h3></div>
+                    <div class="card-toggle"></div>
+                    <div class="card-content">
+                        <p><strong>Practice:</strong> Classify every claim as True, False, or Partly True.</p>
+                    </div>
+                </div>
+                <div class="card" id="virtue-sense">
+                    <div class="card-header"><div class="card-number">2</div><h3 class="font-bold">Sense-Making</h3></div>
+                    <div class="card-toggle"></div>
+                    <div class="card-content">
+                        <p><strong>Practice:</strong> Build explanations that survive new evidence.</p>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="section" id="operational">
+        <div class="container">
+            <div class="cycle-container">
+                <h3 class="text-2xl font-bold text-center mb-6">The Resilience Cycle</h3>
+                <div class="cycle-steps">
+                    <div class="cycle-step">
+                        <div class="step-number">1</div>
+                        <div><h4 class="font-bold">Detect</h4><p>Identify the threat type.</p></div>
+                    </div>
+                    <div class="cycle-step">
+                        <div class="step-number">2</div>
+                        <div><h4 class="font-bold">Label</h4><p>Observe emotion with one word.</p></div>
+                    </div>
+                    <div class="cycle-step">
+                        <div class="step-number">3</div>
+                        <div><h4 class="font-bold">Pause</h4><p>Stop immediate reaction.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Toggle Card Expansion
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // If user clicks a tag, don't toggle the card (let the tag link work)
+                if (e.target.classList.contains('virtue-tag')) return;
+                
+                card.classList.toggle('active');
+            });
+        });
+
+        // Virtue Tag Navigation
+        document.querySelectorAll('.virtue-tag').forEach(tag => {
+            tag.addEventListener('click', (e) => {
+                const virtueName = tag.getAttribute('data-virtue');
+                const targetCard = document.getElementById(`virtue-${virtueName}`);
+                
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetCard.classList.add('active');
+                    targetCard.style.border = '2px solid #d4af37';
+                    setTimeout(() => targetCard.style.border = '', 2000);
+                }
+            });
+        });
+
+        // Initial Animations
+        document.addEventListener('DOMContentLoaded', () => {
+            anime({
+                targets: '.card',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                easing: 'easeOutQuart'
+            });
+        });
+    </script>
+</body>
+</html>
